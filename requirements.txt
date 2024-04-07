@@ -1,5 +1,6 @@
 dash==2.16.1
 pandas==2.2.1
-SQLAlchemy==2.0.29
+SQLAlchemy
 gunicorn
+psycopg2-binary
 dash-tools
