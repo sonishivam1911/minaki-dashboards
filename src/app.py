@@ -189,6 +189,8 @@ order by tm."year",tm."month";
 fetch_sku_sales_data = """
 select tm.partner_id as id
 ,pm.partner_name_location as name
+,tm."year" 
+,tm."month" 
 ,tm.partner_sku as partner_sku 
 ,tm.sku as sku
 ,pm2.division 
@@ -198,7 +200,7 @@ select tm.partner_id as id
 from transaction_master tm  
 left join partner_master pm on tm.partner_id = pm.partner_id
 left join product_master pm2 on pm2.sku = tm.partner_sku  or pm2.sku = tm.sku
-group by 1,2,3,4,5
+group by 1,2,3,4,5,6,7
 order by total_quatity desc,total_value DESC;
 """
 
@@ -313,7 +315,7 @@ app.layout = dbc.Container([
 
     dbc.Row([
         
-        dbc.Col(html.H2("Monthly Revenue Across All Partners",
+        dbc.Col(html.H2("Monthly Revenue Across All Partners Tags - Aza, Pernia, Taj & SCW",
                         className='text-center text-primary mb-4'),
                 width=12),
 
@@ -323,7 +325,7 @@ app.layout = dbc.Container([
            xs=12, sm=12, md=12, lg=5, xl=5
         ),
 
-        dbc.Col(html.H2("Monthly Revenue Across Select Partner Partners",
+        dbc.Col(html.H2("Monthly Revenue Across Selected Partner",
                         className='text-center text-primary mb-4'),
                 width=12),
 
@@ -336,7 +338,7 @@ app.layout = dbc.Container([
         ),
 
         dbc.Col([
-            html.H3("Partner-Tag Year Month Report:",
+            html.H3("Monthly Sales Metrics Report:",
                    style={"textDecoration": "underline"}),
             dash_table.DataTable(
                 data=df_partner_tag_year_month.to_dict('records'), 
@@ -356,7 +358,7 @@ app.layout = dbc.Container([
         ),
 
         dbc.Col([
-            html.H3("Monthly Product Type Revenue Analysis - All Partners:",
+            html.H3("Monthly Product Type Revenue Analysis:",
                    style={"textDecoration": "underline"}),
             dcc.Graph(id='partner-division-bar',figure={}),
         ], #width={'size':5, 'offset':1},
@@ -368,7 +370,7 @@ app.layout = dbc.Container([
 
 
         dbc.Col([
-            html.H3("Select Sub Partner:",
+            html.H3("Select Sub-Partner:",
                    style={"textDecoration": "underline"}),              
             dcc.Dropdown(df["name"].unique(),'Select City Walk ',id='dropdown-name'),
         ], #width={'size':5, 'offset':0, 'order':2},
@@ -376,7 +378,7 @@ app.layout = dbc.Container([
         ),  
 
         dbc.Col([
-            html.P("Monthly Sales Analysis - All Sub Partners",
+            html.H3("Monthly Sales Analysis - All Sub Partners",
                    style={"textDecoration": "underline"}),
             dash_table.DataTable(
                 id='table-partner-year-month',
@@ -405,7 +407,7 @@ app.layout = dbc.Container([
         ),
 
         dbc.Col([
-            html.H3("Monthly Product Sales Analysis - All Sub Partner Graph",
+            html.H3("Monthly Product Sales Analysis",
                    style={"textDecoration": "underline"}),
             dcc.Graph(id='partner-division-month-year-bar',figure={}),
         ], #width={'size':5, 'offset':1},
@@ -413,7 +415,7 @@ app.layout = dbc.Container([
         ),
 
         dbc.Col([
-            html.H3("Monthly Product Sales Analysis - All Sub Partner",
+            html.H3("Monthly Product Sales Table",
                    style={"textDecoration": "underline"}),
             dash_table.DataTable(
                 id='table-partner-year-month-division',
@@ -519,6 +521,8 @@ def update_output(year,month,name,partner_tag):
     ]
 
     df_sku_sales_new = df_sku_sales[
+        df_sku_sales['year'].eq(year) 
+        & df_sku_sales['month'].eq(month) &
         df_sku_sales['name'].eq(name)
     ]
 
