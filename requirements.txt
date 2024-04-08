@@ -4,3 +4,4 @@ SQLAlchemy
 gunicorn
 psycopg2-binary
 dash-tools
+dash-bootstrap-components
