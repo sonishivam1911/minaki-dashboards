@@ -1,5 +1,7 @@
 from dash import Dash, html, dash_table, dcc,Input, Output,callback
 import numpy as np
+import calendar
+from datetime import datetime
 import plotly.express as px
 import dash_bootstrap_components as dbc
 import pandas as pd
@@ -287,6 +289,10 @@ colors = {
 }
 
 
+now = datetime.now()
+last_month = now.month-1 if now.month > 1 else 12
+year = datetime.now().year
+
 
 app.layout = dbc.Container([
 
@@ -299,13 +305,13 @@ app.layout = dbc.Container([
     dbc.Row([
 
         dbc.Col([
-            dcc.Dropdown(df["year"].unique(),2023,id='dropdown-year'),
+            dcc.Dropdown(df["year"].unique(),year,id='dropdown-year'),
         ],# width={'size':5, 'offset':1, 'order':1},
            xs=12, sm=12, md=12, lg=5, xl=5
         ),
 
         dbc.Col([
-            dcc.Dropdown(df["month"].unique(),'Dec',id='dropdown-month'),
+            dcc.Dropdown(df["month"].unique(),calendar.month_name[last_month],id='dropdown-month'),
         ], #width={'size':5, 'offset':0, 'order':2},
            xs=12, sm=12, md=12, lg=5, xl=5
         ),      
